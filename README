@@ -1,1 +1,119 @@
-Finally, finished it :P
+# Discord Relay & Meme Coin Generator
+
+A multi-functional Discord bot application that relays messages between Discord channels via webhooks and generates meme cryptocurrency tokens on pump.fun from Discord embeds.
+
+## Features
+
+### 1. Discord Message Relay
+- Monitors specified Discord channels and forwards messages to configured webhook destinations
+- Preserves original message content, embeds, and author information
+- Maintains message chronology with efficient message ID tracking
+- Avoids duplicate messages and prevents initial spam on first run
+
+### 2. Meme Coin Generation
+- Automatically adds "Generate & Create Meme Coin" buttons to Discord embeds in specified channels
+- Uses Google Gemini AI to generate creative meme cryptocurrency details:
+  - Catchy ticker symbols
+  - Creative coin names
+  - Humorous descriptions
+- Includes original embed images in generated meme coins
+
+### 3. Automated pump.fun Integration
+- Opens pump.fun token creation page
+- Auto-fills token details (name, ticker, description)
+- Attempts to upload images from Discord embeds
+- Provides fallback instructions for manual submission
+
+## Requirements
+
+- Python 3.8+
+- Discord bot token
+- Discord user token
+- Google Gemini AI API key
+- Chrome installation with user profile
+- Phantom wallet browser extension installed in Chrome (for pump.fun integration)
+
+## Dependencies
+
+```
+discord.py
+python-dotenv
+requests
+google-generativeai
+undetected-chromedriver
+selenium
+```
+
+## Installation
+
+1. Clone this repository
+2. Install required packages:
+   ```
+   pip install -r requirements.txt
+   ```
+3. Create a `.env` file with the following variables:
+   ```
+   BOT_TOKEN=your_discord_bot_token
+   USER_TOKEN=your_discord_user_token
+   GEMINI_API_KEY=your_gemini_api_key
+   ```
+
+## Configuration
+
+### Relay Configuration
+Edit the `RELAY_MAPPINGS` dictionary to configure which channels to monitor and where to relay messages:
+
+```python
+RELAY_MAPPINGS = {
+    "SOURCE_CHANNEL_ID": ["WEBHOOK_URL1", "WEBHOOK_URL2"],
+    # Add more channel-to-webhook mappings as needed
+}
+```
+
+### Meme Coin Button Configuration
+Set the channel where meme coin buttons should be added:
+
+```python
+# Channel where meme coin buttons will be added to embeds
+MEMECOIN_BUTTON_CHANNEL_ID = "YOUR_CHANNEL_ID"
+```
+
+### Chrome User Profile
+The application uses your local Chrome profile with the Phantom wallet extension for pump.fun integration. Ensure the path is correct:
+
+```python
+user_data_dir = os.path.join(os.environ['USERPROFILE'], 'AppData', 'Local', 'Google', 'Chrome', 'User Data', 'Default')
+```
+
+## Usage
+
+### Starting the Application
+Run the script to start both the relay system and Discord bot:
+
+```
+python main.py
+```
+
+### Bot Commands
+- `!createtoken [name] [ticker] [description]` - Manually create a token on pump.fun with the specified details
+
+### Meme Coin Generation
+1. Messages with embeds in the configured channel will automatically receive a "Generate & Create Meme Coin" button
+2. Click the button to generate a meme coin using Gemini AI based on the embed content
+3. The application will open pump.fun and attempt to fill in the token creation form
+4. Review the form and submit manually when ready
+
+## Data Storage
+
+The application stores the last processed message ID for each monitored channel in the `relay_data` directory to ensure message continuity between restarts.
+
+## Security Notes
+
+- The application requires a user token for accessing Discord's API. Use at your own risk as this may violate Discord's Terms of Service.
+- Store your API keys and tokens securely in the `.env` file and never commit them to version control.
+- The application interacts with your Chrome browser and Phantom wallet. Ensure you understand the security implications.
+
+## Contributing
+
+Contributions, bug reports, and feature requests are welcome! Please feel free to submit a pull request or open an issue.
+
